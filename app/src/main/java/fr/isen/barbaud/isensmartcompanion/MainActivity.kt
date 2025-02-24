@@ -49,6 +49,8 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
@@ -71,10 +73,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-/*import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bottomnavbarexample.ui.theme.BottomNavBarExampleTheme*/
+//import com.example.bottomnavbarexample.ui.theme.BottomNavBarExampleTheme
 
 
 data class TabBarItem(
@@ -85,6 +89,7 @@ data class TabBarItem(
 )
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -93,15 +98,42 @@ class MainActivity : ComponentActivity() {
             val homeTab = TabBarItem(title = "Home", selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
             val alertsTab = TabBarItem(title = "Alerts", selectedIcon = Icons.Filled.Notifications, unselectedIcon = Icons.Outlined.Notifications, badgeAmount = 7)
             val settingsTab = TabBarItem(title = "Settings", selectedIcon = Icons.Filled.Settings, unselectedIcon = Icons.Outlined.Settings)
-            val moreTab = TabBarItem(title = "More", selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
+            val moreTab = TabBarItem(title = "More", selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
+
+            // creating a list of all the tabs
+            val tabBarItems = listOf(homeTab, alertsTab, settingsTab, moreTab)
+
+            // creating our navController
+            val navController = rememberNavController()
+
 
             ISENSmartCompanionTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
+                        NavHost(navController = navController, startDestination = homeTab.title) {
+                            composable(homeTab.title) {
+                                Text(homeTab.title)
+                            }
+                            composable(alertsTab.title) {
+                                Text(alertsTab.title)
+                            }
+                            composable(settingsTab.title) {
+                                Text(settingsTab.title)
+                            }
+                            composable(moreTab.title) {
+                                MoreView()
+                            }
+                        }
+                    }}
+                /*Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
-                }
+                }*/
             }
         }
     }
@@ -160,14 +192,7 @@ fun ChatZone(modifier: Modifier = Modifier){
     Column { TextField() }
 }*/
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ISENSmartCompanionTheme {
-        Greeting("Android2")
-        MoreView()
-    }
-}
+
 
 // ----------------------------------------
 // This is a wrapper view that allows us to easily and cleanly
@@ -245,5 +270,16 @@ fun MoreView() {
         Text("Thing 3")
         Text("Thing 4")
         Text("Thing 5")
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    ISENSmartCompanionTheme {
+        Greeting("Android2")
+        MoreView()
+
     }
 }
