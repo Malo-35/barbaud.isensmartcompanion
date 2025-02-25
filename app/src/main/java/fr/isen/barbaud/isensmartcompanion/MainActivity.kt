@@ -46,6 +46,7 @@ import org.w3c.dom.Text
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -73,6 +74,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 
 import androidx.navigation.compose.NavHost
@@ -96,12 +98,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             // setting up the individual tabs
             val homeTab = TabBarItem(title = "Home", selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val alertsTab = TabBarItem(title = "Alerts", selectedIcon = Icons.Filled.Notifications, unselectedIcon = Icons.Outlined.Notifications, badgeAmount = 7)
-            val settingsTab = TabBarItem(title = "Settings", selectedIcon = Icons.Filled.Settings, unselectedIcon = Icons.Outlined.Settings)
-            val moreTab = TabBarItem(title = "More", selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
+            val eventTab = TabBarItem(title = "Events", selectedIcon = Icons.Filled.Notifications, unselectedIcon = Icons.Outlined.Notifications, badgeAmount = 7)
+            //val settingsTab = TabBarItem(title = "Settings", selectedIcon = Icons.Filled.Settings, unselectedIcon = Icons.Outlined.Settings)
+            val historyTab = TabBarItem(title = "More", selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
 
             // creating a list of all the tabs
-            val tabBarItems = listOf(homeTab, alertsTab, settingsTab, moreTab)
+            val tabBarItems = listOf(homeTab, eventTab, historyTab)
 
             // creating our navController
             val navController = rememberNavController()
@@ -112,18 +114,24 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
+                    Scaffold(bottomBar = { TabView(tabBarItems, navController) },
+                        modifier =  Modifier.fillMaxSize()) { innerPadding ->
                         NavHost(navController = navController, startDestination = homeTab.title) {
                             composable(homeTab.title) {
-                                Text(homeTab.title)
+                                Greeting("Android",
+                                   innerPadding
+                                )
                             }
-                            composable(alertsTab.title) {
-                                Text(alertsTab.title)
+                            composable(eventTab.title) {
+                                EventsScreen(innerPadding,
+                                    eventHandler = {startDetailActivity()}
+//                                    {
+//                                        val intent = Intent(this@MainActivity, EventDetailActivity),
+//                                        startActivity(intent)
+//                                    }
+                                )
                             }
-                            composable(settingsTab.title) {
-                                Text(settingsTab.title)
-                            }
-                            composable(moreTab.title) {
+                            composable(historyTab.title) {
                                 MoreView()
                             }
                         }
@@ -137,32 +145,38 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    fun startDetailActivity(){
+        val intent = Intent(this, EventDetailActivity::class.java)
+        startActivity(intent)
+    }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(name: String, innerPadding: PaddingValues) {
     val context = LocalContext.current      //JSP ce que ça fait...
     var userInput = remember { mutableStateOf("test") }
     Column(                                 //Je crée une colonne pour centrer tous mes objets
-        modifier = Modifier.fillMaxWidth().fillMaxHeight().background(Color(255,0,255)), //Je dit que la colonne fait toute la largeure du téléphone
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(0.dp,16.dp)
+            .background(Color(255,0,255)), //Je dit que la colonne fait toute la largeur du téléphone
         horizontalAlignment = Alignment.CenterHorizontally,  //Je demande d'alligner tous les objects contenu dans les accolades au centre.
         //verticalArrangement = Arrangement.Bottom
 
     ){
         Image(painterResource(R.drawable.isen), "isen logo")
         Text(
-            text = "Hello $name!",
-            modifier = modifier     //Ici on récupère le modifier parent qui apporte des modificateurs tels que le padding, centrer du text, etc...
+            text = "Hello $name!",     //Ici on récupère le modifier parent qui apporte des modificateurs tels que le padding, centrer du text, etc...
         )
         Text(   //test
             text = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH !!!",
-            modifier = modifier
         )
+        Text("", modifier = Modifier.fillMaxSize())
         Row(
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier.wrapContentSize()
+            modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
                 .background(Color(255,0,0))
         ){
             TextField(
@@ -171,26 +185,14 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1F),  //Ici on dit que le TextField a plus de poids que le boutton send, donc la zone de texte prend autant de place qu'elle peut/en a besoin mais ne rejette pas les autres éléments en dehors du téléphone.
             )
             OutlinedButton(onClick = {
-                /*Toast.makeText(context,"show toast\n${userInput.value}", Toast.LENGTH_LONG).show()*/
                 Toast.makeText(context,"Question Submitted", Toast.LENGTH_LONG).show()  //Le toast c'est une mini popup qui apparait temporairement en bas de l'écrant, généralement utilisé pour avertir et faire du debug.
             },
                 modifier = Modifier.background(Color(0,255,0)),
                 content = {Image(painterResource(R.drawable.send), "send")}
             )
-            /*Button({
-                Log.d("testing","button clicked")
-            },
-                content = {
-                    Image(painterResource(R.drawable.send), "send")
-                })*/
         }
     }
 }
-
-/*@Composable
-fun ChatZone(modifier: Modifier = Modifier){
-    Column { TextField() }
-}*/
 
 
 
@@ -278,7 +280,7 @@ fun MoreView() {
 @Composable
 fun GreetingPreview() {
     ISENSmartCompanionTheme {
-        Greeting("Android2")
+        Greeting("Android2", PaddingValues(8.dp))
         MoreView()
 
     }
