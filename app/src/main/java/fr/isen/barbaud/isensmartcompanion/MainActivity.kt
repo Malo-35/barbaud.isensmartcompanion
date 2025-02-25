@@ -50,6 +50,8 @@ import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Home
@@ -80,8 +82,54 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import java.util.Date
+
 //import com.example.bottomnavbarexample.ui.theme.BottomNavBarExampleTheme
 
+data class MyEventItem(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val date: Date,
+    val location: String,
+    val category: String
+)
+
+class EventModel{
+    constructor(id: Int, title: String, description: String, date: Date, location: String, category: String){
+//        this.id=id
+//        this.title=title
+//        this.description=description
+//        this.date=date
+//        this.location=location
+//        this.category=category
+        this.MyEventList= (listOf(MyEventItem(id, title, description, date, location, category)))
+    }
+    constructor(giveListHere: List<MyEventItem>){
+        this.MyEventList=giveListHere
+    }
+    //    val id: Int = 0
+//    val title: String = ""
+//    val description: String = ""
+//    val date: Date
+//    val location: String
+//    val category: String
+    var MyEventList: List<MyEventItem>
+
+    fun GetListEvents(): List<MyEventItem>{
+        return MyEventList
+    }
+
+    fun PostEvent(newEvent:MyEventItem){
+        this.MyEventList += newEvent
+    }
+    fun PostEvent(id: Int, title: String, description: String, date: Date, location: String, category: String){
+        this.MyEventList += MyEventItem(id, title, description, date, location, category)
+    }
+    fun DeleteById(id: Int){
+        //TODO
+    }
+}
 
 data class TabBarItem(
     val title: String,
@@ -100,7 +148,7 @@ class MainActivity : ComponentActivity() {
             val homeTab = TabBarItem(title = "Home", selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
             val eventTab = TabBarItem(title = "Events", selectedIcon = Icons.Filled.Notifications, unselectedIcon = Icons.Outlined.Notifications, badgeAmount = 7)
             //val settingsTab = TabBarItem(title = "Settings", selectedIcon = Icons.Filled.Settings, unselectedIcon = Icons.Outlined.Settings)
-            val historyTab = TabBarItem(title = "More", selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
+            val historyTab = TabBarItem(title = "History", selectedIcon = Icons.AutoMirrored.Filled.List, unselectedIcon = Icons.AutoMirrored.Outlined.List)
 
             // creating a list of all the tabs
             val tabBarItems = listOf(homeTab, eventTab, historyTab)
@@ -125,27 +173,17 @@ class MainActivity : ComponentActivity() {
                             composable(eventTab.title) {
                                 EventsScreen(innerPadding,
                                     eventHandler = {startDetailActivity()}
-//                                    {
-//                                        val intent = Intent(this@MainActivity, EventDetailActivity),
-//                                        startActivity(intent)
-//                                    }
                                 )
                             }
                             composable(historyTab.title) {
                                 MoreView()
                             }
                         }
-                    }}
-                /*Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }*/
+                    }
+                }
             }
         }
     }
-
     fun startDetailActivity(){
         val intent = Intent(this, EventDetailActivity::class.java)
         startActivity(intent)
@@ -275,6 +313,35 @@ fun MoreView() {
     }
 }
 
+@Composable
+fun EventsScreen(innerPadding: PaddingValues, eventHandler: () -> Unit){
+    val context = LocalContext.current
+    var myListEvent:List<MyEventItem> = listOf(MyEventItem(0,"NDISEN", "Nuit de programmation", Date(), "Sud", "Developpement"), MyEventItem(1,"Erasmus", "Étudiants étrangers", Date(), "ISEN", "Apprentissage"), MyEventItem(2, "ISEN Avengers", "Un mail salé de vérité...", Date(), "Amphythéatre", "Mémorable", ))
+
+    var MyFakeEvents = EventModel(myListEvent)
+    Column {
+        LazyColumn {
+            items(MyFakeEvents.GetListEvents()) { item ->
+                Text(item.title)
+                Text(item.description)
+                Text(item.date.toString())
+                Text(item.location)
+                Text(item.category)
+            }
+        }
+        OutlinedButton(
+            onClick = {
+                //val intent = Intent(context, EventDetailActivity::class.java)
+                //context.startActivity(intent)
+                //Log.d("eventScreen","onClick")
+            },
+            modifier = Modifier.fillMaxWidth(),
+            content = {
+                Text("Temporary button")
+            }
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

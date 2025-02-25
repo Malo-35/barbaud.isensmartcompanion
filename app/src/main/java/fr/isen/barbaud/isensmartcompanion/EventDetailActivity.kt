@@ -9,9 +9,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,52 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import java.util.Date
 
-data class MyEventItem(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val date: Date,
-    val location: String,
-    val category: String
-)
-
-class EventModel{
-    constructor(id: Int, title: String, description: String, date: Date, location: String, category: String){
-//        this.id=id
-//        this.title=title
-//        this.description=description
-//        this.date=date
-//        this.location=location
-//        this.category=category
-        this.MyEventList= (listOf(MyEventItem(id, title, description, date, location, category)))
-    }
-    constructor(giveListHere: List<MyEventItem>){
-        this.MyEventList=giveListHere
-    }
-//    val id: Int = 0
-//    val title: String = ""
-//    val description: String = ""
-//    val date: Date
-//    val location: String
-//    val category: String
-    var MyEventList: List<MyEventItem>
-
-    fun GetListEvents(): List<MyEventItem>{
-        return MyEventList
-    }
-
-    fun PostEvent(newEvent:MyEventItem){
-        this.MyEventList += newEvent
-    }
-    fun PostEvent(id: Int, title: String, description: String, date: Date, location: String, category: String){
-        this.MyEventList += MyEventItem(id, title, description, date, location, category)
-    }
-    fun DeleteById(id: Int){
-        //TODO
-    }
-}
-
-
 class EventDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +39,7 @@ class EventDetailActivity : ComponentActivity() {
             ISENSmartCompanionTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting2(
-                        name = "Android",
+                        name = "Android9999999",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -92,34 +48,16 @@ class EventDetailActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun EventsScreen(innerPadding: PaddingValues, eventHandler: () -> Unit){
-    val context = LocalContext.current
-    var myListEvent:List<MyEventItem> = listOf(MyEventItem(0,"NDISEN", "Nuit de programmation", Date(), "Sud", "Developpement"), MyEventItem(1,"Erasmus", "Étudiants étrangers", Date(), "ISEN", "Apprentissage"), MyEventItem(2, "ISEN Avengers", "Un mail salé de vérité...", Date(), "Amphythéatre", "Mémorable", ))
 
-    var MyFakeEvents = EventModel(myListEvent)
 
-    LazyColumn {
-        items(MyFakeEvents.GetListEvents()) { item ->
-            Text(item.title)
-            Text(item.description)
-            Text(item.date.toString())
-            Text(item.location)
-            Text(item.category)
-        }
-    }
-    Button(
-        onClick = {
-            eventHandler()
-            //val intent = Intent(context, EventDetailActivity::class.java)
-            //context.startActivity(intent)
-            //Log.d("eventScreen","onClick")
-        },
-        content = {
-            Text("Temporary button")
-        }
-    )
-}
+//@Composable
+//fun EventRow(event: EventModel, eventHandler: (EventModel) -> Unit){
+//    Card(
+//        modifier = Modifier
+//            .padding(16dp)
+//            .
+//    )
+//}
 
 @Composable
 fun Greeting2(name: String, modifier: Modifier = Modifier) {
