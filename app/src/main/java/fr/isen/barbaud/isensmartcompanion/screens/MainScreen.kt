@@ -67,7 +67,6 @@ fun MainScreen(innerPadding: PaddingValues) {
         Text("", modifier = Modifier
             .fillMaxSize()
             .weight(0.5F))
-        Text("Couycou : ${MyGodDamnAnswer.value}")
         LazyColumn {
             items(discussionList.value) { eachEvent ->
                 Text(
