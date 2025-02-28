@@ -4,16 +4,22 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -53,59 +59,71 @@ fun MainScreen(innerPadding: PaddingValues) {
         modelName = "gemini-1.5-flash",
         apiKey = ApiKey
     )
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-            .fillMaxSize()
-            .padding(innerPadding)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painterResource(R.drawable.isen),
-            context.getString(R.string.isen_logo))
-        Text(context.getString(R.string.app_name))
-        Text("", modifier = Modifier
-            .fillMaxSize()
-            .weight(0.5F))
-        LazyColumn {
-            items(discussionList.value) { eachEvent ->
-                Text(
-                    "${MyGodDamnAnswer.value}",
-                    modifier = Modifier
-                        .padding(0.dp, 3.dp)
-                )
-            }
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.LightGray)) {
-            TextField(
-                value = userInput.value,
-                onValueChange = { newValue ->
-                    userInput.value = newValue
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent),
-                modifier = Modifier.weight(1F))
-
-            OutlinedButton(onClick = {
-                Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
-                CoroutineScope(Dispatchers.IO).launch {
-                    var AIAnswer = testAI.generateContent(userInput.value)
-
-                    Log.d("TUEZ-MOI !!!", "Valeur brute : ${AIAnswer.text}")
-
-                    MyGodDamnAnswer.value = AIAnswer.text // Mise à jour de l'état de ma ****** de réponse...
+    Box(modifier = Modifier.fillMaxWidth()
+        .fillMaxSize()
+        .padding(innerPadding)) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painterResource(R.drawable.isen),
+                context.getString(R.string.isen_logo))
+            Text(context.getString(R.string.app_name))
+            Spacer(Modifier.weight(1f))
+            /*ScrollableTabRow(
+                selectedTabIndex = 1
+            ) {*/
+            LazyColumn {
+                items(discussionList.value) { eachEvent ->
+                    Text(
+                        "${eachEvent}",
+                        modifier = Modifier
+                            .padding(0.dp, 3.dp)
+                    )
                 }
-        },  modifier = Modifier
-                .background(Color.Red, shape = RoundedCornerShape(50)),
-                content = {
-                    Image(painterResource(R.drawable.send), "")
-                })
+            }
+            Spacer(Modifier.height(100.dp))
+        }
+        Column {
+            Spacer(Modifier.weight(1f))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .requiredHeightIn(90.dp,500.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.LightGray)
+                //.weight(1F)
+            ) {
+                TextField(
+                    value = userInput.value,
+                    onValueChange = { newValue ->
+                        userInput.value = newValue
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent),
+                    modifier = Modifier.weight(1F))
+
+                OutlinedButton(onClick = {
+                    Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        var AIAnswer = testAI.generateContent(userInput.value)
+
+                        Log.d("TUEZ-MOI !!!", "Valeur brute : ${AIAnswer.text}")
+
+                        MyGodDamnAnswer.value = AIAnswer.text // Mise à jour de l'état de ma ****** de réponse...
+                        discussionList.value = discussionList.value + MyGodDamnAnswer.value
+                    }
+                },  modifier = Modifier
+                    .background(Color.Red, shape = RoundedCornerShape(50)),
+                    content = {
+                        Image(painterResource(R.drawable.send), "")
+                    })
+            }
         }
     }
 }
