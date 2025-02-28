@@ -68,4 +68,6 @@ dependencies {
     // Add the dependency for the Vertex AI in Firebase library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.firebase.vertexai)
+
+    implementation(libs.generativeai)
 }
