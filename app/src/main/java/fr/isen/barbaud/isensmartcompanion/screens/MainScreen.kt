@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
@@ -66,7 +67,8 @@ fun MainScreen(innerPadding: PaddingValues) {
             modifier = Modifier.fillMaxWidth()
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp)
+                ,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(R.drawable.isen),
@@ -117,6 +119,7 @@ fun MainScreen(innerPadding: PaddingValues) {
 
                         MyGodDamnAnswer.value = AIAnswer.text // Mise à jour de l'état de ma ****** de réponse...
                         discussionList.value = discussionList.value + MyGodDamnAnswer.value
+                        userInput.value = ""
                     }
                 },  modifier = Modifier
                     .background(Color.Red, shape = RoundedCornerShape(50)),
