@@ -1,4 +1,4 @@
-package fr.isen.janowski.isensmartcompanion
+package fr.isen.barbaud.isensmartcompanion
 
 import android.os.Bundle
 import android.util.Log

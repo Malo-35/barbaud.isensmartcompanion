@@ -52,17 +52,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.vertexai.vertexAI
 import fr.isen.barbaud.isensmartcompanion.models.EventModel
 import fr.isen.barbaud.isensmartcompanion.screens.EventsScreen
 import fr.isen.barbaud.isensmartcompanion.screens.HistoryScreen
 import fr.isen.barbaud.isensmartcompanion.screens.MainScreen
 import fr.isen.barbaud.isensmartcompanion.screens.TabView
 import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
-import fr.isen..isensmartcompanion.EventDetailActivity
-import fr.isen.janowski
+import fr.isen.barbaud.isensmartcompanion.EventDetailActivity
+import fr.isen.barbaud.isensmartcompanion.api.NetworkManager
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.sql.Types.NULL
 
 data class TabBarItem(
     val title: String,
@@ -75,6 +82,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("lifecycle", "MainActivity onCreate")
+
+
         enableEdgeToEdge()
         setContent {
             val homeTab = TabBarItem(title = getString(R.string.bottom_navbar_home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)

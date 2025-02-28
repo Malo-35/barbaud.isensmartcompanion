@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.converter.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -59,4 +61,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Import the BoM for the Firebase platform
+    implementation(platform(libs.firebase.bom))
+
+    // Add the dependency for the Vertex AI in Firebase library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation(libs.firebase.vertexai)
 }

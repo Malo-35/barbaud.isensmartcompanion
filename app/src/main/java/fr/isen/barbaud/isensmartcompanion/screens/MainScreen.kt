@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.vertexai.type.GenerateContentResponse
+import com.google.firebase.vertexai.vertexAI
 import fr.isen.barbaud.isensmartcompanion.R
 import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 
@@ -32,6 +36,8 @@ import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 fun MainScreen(innerPadding: PaddingValues) {
     val context = LocalContext.current
     var userInput = remember { mutableStateOf("") }
+    var AIAnswer = remember { mutableStateOf(String) }
+
     Column(
         modifier = Modifier.fillMaxWidth()
             .fillMaxSize()
@@ -45,6 +51,7 @@ fun MainScreen(innerPadding: PaddingValues) {
         Text("", modifier = Modifier
             .fillMaxSize()
             .weight(0.5F))
+        Text("${AIAnswer}")
         Row(modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
@@ -61,15 +68,21 @@ fun MainScreen(innerPadding: PaddingValues) {
                     errorContainerColor = Color.Transparent),
                 modifier = Modifier.weight(1F))
             OutlinedButton ( onClick = {
-                Toast.makeText(context, "user input : ${userInput.value}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
+                AIAnswer = AnsweringAI(userInput)
             },  modifier = Modifier
                 .background(Color.Red, shape = RoundedCornerShape(50)),
                 content = {
                     Image(painterResource(R.drawable.send), "")
                 })
         }
-
     }
+}
+
+suspend fun AnsweringAI(userInput: MutableState<String>): String? {
+    val generativeModel = Firebase.vertexAI.generativeModel("gemini-2.0-flash")
+    val response = generativeModel.generateContent(userInput.value)
+    return response.text
 }
 
 @Preview(showBackground = true)
