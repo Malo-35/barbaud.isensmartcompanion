@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -42,12 +44,13 @@ fun MainScreen(innerPadding: PaddingValues) {
     val context = LocalContext.current
     var userInput = remember { mutableStateOf("") }
     var MyGodDamnAnswer = remember { mutableStateOf<String?>("") }
+    var discussionList = remember { mutableStateOf<List<String?>>(emptyList()) }
 
 
     //val apiKey = BuildConfig.apiKey
     val ApiKey="AIzaSyBCRAYykFfKQNRooe0yK8QS5f3OGmX0qlM"
     val testAI = com.google.ai.client.generativeai.GenerativeModel(
-        modelName = "gemini-2.0-flash",
+        modelName = "gemini-1.5-flash",
         apiKey = ApiKey
     )
 
@@ -65,6 +68,15 @@ fun MainScreen(innerPadding: PaddingValues) {
             .fillMaxSize()
             .weight(0.5F))
         Text("Couycou : ${MyGodDamnAnswer.value}")
+        LazyColumn {
+            items(discussionList.value) { eachEvent ->
+                Text(
+                    "${MyGodDamnAnswer.value}",
+                    modifier = Modifier
+                        .padding(0.dp, 3.dp)
+                )
+            }
+        }
         Row(modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
@@ -80,18 +92,7 @@ fun MainScreen(innerPadding: PaddingValues) {
                     disabledContainerColor = Color.Transparent,
                     errorContainerColor = Color.Transparent),
                 modifier = Modifier.weight(1F))
-            /*OutlinedButton ( onClick = {
-                Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
-                var testclass = AnsweringAI(userInput)
-                CoroutineScope(Dispatchers.IO).launch{
-                    var AIAnswer = testAI.generateContent(userInput.value)
-                    var testcheck = mutableStateOf(AIAnswer.text)
 
-                    MyGodDamnAnswer = (mutableStateOf(AIAnswer.text))
-                    Log.d("TUEZ-MOI !!!", "Valeure brute : ${MyGodDamnAnswer}")
-                    Log.d("TUEZ-MOI !!! ENCORE", "Valeure value : ${MyGodDamnAnswer.value}")
-                    MyGodDamnAnswer.value = MyGodDamnAnswer.value
-                }*/
             OutlinedButton(onClick = {
                 Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
                 CoroutineScope(Dispatchers.IO).launch {
@@ -99,7 +100,7 @@ fun MainScreen(innerPadding: PaddingValues) {
 
                     Log.d("TUEZ-MOI !!!", "Valeur brute : ${AIAnswer.text}")
 
-                    MyGodDamnAnswer.value = AIAnswer.text // ✅ Mise à jour correcte de l'état
+                    MyGodDamnAnswer.value = AIAnswer.text // Mise à jour de l'état de ma ****** de réponse...
                 }
         },  modifier = Modifier
                 .background(Color.Red, shape = RoundedCornerShape(50)),
