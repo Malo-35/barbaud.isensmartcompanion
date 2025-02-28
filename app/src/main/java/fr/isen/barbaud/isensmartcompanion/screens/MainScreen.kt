@@ -80,7 +80,7 @@ fun MainScreen(innerPadding: PaddingValues) {
                     disabledContainerColor = Color.Transparent,
                     errorContainerColor = Color.Transparent),
                 modifier = Modifier.weight(1F))
-            OutlinedButton ( onClick = {
+            /*OutlinedButton ( onClick = {
                 Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
                 var testclass = AnsweringAI(userInput)
                 CoroutineScope(Dispatchers.IO).launch{
@@ -91,8 +91,17 @@ fun MainScreen(innerPadding: PaddingValues) {
                     Log.d("TUEZ-MOI !!!", "Valeure brute : ${MyGodDamnAnswer}")
                     Log.d("TUEZ-MOI !!! ENCORE", "Valeure value : ${MyGodDamnAnswer.value}")
                     MyGodDamnAnswer.value = MyGodDamnAnswer.value
+                }*/
+            OutlinedButton(onClick = {
+                Toast.makeText(context, "Question Submitted", Toast.LENGTH_LONG).show()
+                CoroutineScope(Dispatchers.IO).launch {
+                    var AIAnswer = testAI.generateContent(userInput.value)
+
+                    Log.d("TUEZ-MOI !!!", "Valeur brute : ${AIAnswer.text}")
+
+                    MyGodDamnAnswer.value = AIAnswer.text // ✅ Mise à jour correcte de l'état
                 }
-            },  modifier = Modifier
+        },  modifier = Modifier
                 .background(Color.Red, shape = RoundedCornerShape(50)),
                 content = {
                     Image(painterResource(R.drawable.send), "")
