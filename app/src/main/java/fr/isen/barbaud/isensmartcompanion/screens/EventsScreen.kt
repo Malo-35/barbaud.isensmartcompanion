@@ -34,6 +34,7 @@ fun EventsScreen(innerPadding: PaddingValues, eventHandler: (EventModel) -> Unit
     val context = LocalContext.current
     val events = remember{ mutableStateOf<List<EventModel>>(listOf()) }
 
+
     LaunchedEffect(Unit) {
         val call = NetworkManager.api.getEvents()
         call.enqueue(object: Callback<List<EventModel>> {

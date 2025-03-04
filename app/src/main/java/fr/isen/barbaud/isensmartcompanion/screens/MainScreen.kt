@@ -35,16 +35,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.room.Room
 import com.google.ai.client.generativeai.BuildConfig
 import com.google.firebase.vertexai.GenerativeModel
 import com.google.firebase.vertexai.type.GenerateContentResponse
 import fr.isen.barbaud.isensmartcompanion.R
+import fr.isen.barbaud.isensmartcompanion.datasaves.AppDatabase
+import fr.isen.barbaud.isensmartcompanion.datasaves.QandA
 import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import fr.isen.barbaud.isensmartcompanion.models.AnsweringAI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Date
 import kotlin.reflect.typeOf
+
+
 
 @Composable
 fun MainScreen(innerPadding: PaddingValues) {
@@ -53,6 +59,11 @@ fun MainScreen(innerPadding: PaddingValues) {
     var MyGodDamnAnswer = remember { mutableStateOf<String?>("") }
     var discussionList = remember { mutableStateOf<List<String?>>(emptyList()) }
 
+    val db = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java, "database-name"
+    ).build()
+    var MyDataBase = db.ChattingDao()
 
     //val apiKey = BuildConfig.apiKey
     val ApiKey="AIzaSyBCRAYykFfKQNRooe0yK8QS5f3OGmX0qlM"
@@ -75,9 +86,7 @@ fun MainScreen(innerPadding: PaddingValues) {
                 context.getString(R.string.isen_logo))
             Text(context.getString(R.string.app_name))
             Spacer(Modifier.weight(1f))
-            /*ScrollableTabRow(
-                selectedTabIndex = 1
-            ) {*/
+
             LazyColumn {
                 items(discussionList.value) { eachEvent ->
                     Text(
@@ -93,7 +102,7 @@ fun MainScreen(innerPadding: PaddingValues) {
             Spacer(Modifier.weight(1f))
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .requiredHeightIn(90.dp,500.dp)
+                .requiredHeightIn(0.dp,500.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color.LightGray)
                 //.weight(1F)
@@ -118,8 +127,15 @@ fun MainScreen(innerPadding: PaddingValues) {
                         Log.d("TUEZ-MOI !!!", "Valeur brute : ${AIAnswer.text}")
 
                         MyGodDamnAnswer.value = AIAnswer.text // Mise à jour de l'état de ma ****** de réponse...
-                        discussionList.value = discussionList.value + MyGodDamnAnswer.value
-                        userInput.value = ""
+                        discussionList.value = discussionList.value + MyGodDamnAnswer.value //Ici on ajoute la réponse à la liste de discussion.
+                        var registeredAnswer = "Aucune reponse reçu."
+                        if(MyGodDamnAnswer.value != null){
+                            registeredAnswer = MyGodDamnAnswer.value!!
+                        }
+                        MyDataBase.post(QandA(question = userInput.value, answer = registeredAnswer, date = Date().toString()))   //Ici j'essaye d'ajouter les nouvelles QandA à ma BDD.
+                        Log.d("ÇA MARCHE OU PAS ???", "${MyDataBase.getAll()}")
+
+                        userInput.value = ""        //Cette ligne permet de vider la zone de texte une fois le message envoyer, ça permet d'éviter d'avoir à effacer son texte à chaque fois qu'on veux parler avec Gemini.
                     }
                 },  modifier = Modifier
                     .background(Color.Red, shape = RoundedCornerShape(50)),

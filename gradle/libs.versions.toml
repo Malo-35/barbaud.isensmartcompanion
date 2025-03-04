@@ -15,9 +15,25 @@ navigationRuntimeKtx = "2.8.7"
 navigationRuntimeAndroid = "2.9.0-alpha06"
 navigationCompose = "2.8.7"
 retrofit = "2.11.0"
+roomCompiler = "2.6.1"
+roomGuava = "2.6.1"
+roomKtx = "2.6.1"
+roomPaging = "2.6.1"
+roomRuntime = "2.6.1"
+roomRxjava2 = "2.6.1"
+roomRxjava3 = "2.6.1"
+roomTesting = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-guava = { module = "androidx.room:room-guava", version.ref = "roomGuava" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomPaging" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-rxjava2 = { module = "androidx.room:room-rxjava2", version.ref = "roomRxjava2" }
+androidx-room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "roomRxjava3" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-vertexai = { module = "com.google.firebase:firebase-vertexai" }
 generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
