@@ -36,58 +36,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.painterResource
 import fr.isen.barbaud.isensmartcompanion.R
 
-/*@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun HistoryScreen(innerPadding: PaddingValues, MyDataBase: Chatting) {
-    val context = LocalContext.current
-    Log.d("Test HISTORY", "${MyDataBase.getAll()}")
-    var myvalues:List<QandA> = MyDataBase.getAll()
-
-    Box(modifier = Modifier
-        .fillMaxWidth()){
-        LazyColumn {
-            items(myvalues){ EachEvent ->
-                Text(
-                    EachEvent.question,
-                    modifier = Modifier
-                        .background(Color.Gray),
-                    Color.White
-                )
-                Text(
-                    EachEvent.answer,
-                    modifier = Modifier
-                        .background(Color.LightGray),
-                    Color.Black
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ShowHistory(mybdd: Chatting){
-    val context = LocalContext.current
-    Box(modifier = Modifier
-        .fillMaxWidth()){
-        LazyColumn {
-            items(mybdd.getAll()){ EachEvent ->
-                Text(
-                    EachEvent.question,
-                    modifier = Modifier
-                        .background(Color.Gray),
-                    Color.White
-                )
-                Text(
-                    EachEvent.answer,
-                    modifier = Modifier
-                        .background(Color.LightGray),
-                    Color.Black
-                )
-            }
-        }
-    }
-}*/
-
+//Je me suis aidé de Chat GPT pour réparer beaucoup de mes erreures mais le procédé reste preuve d'une réflexion personnelle.
+/*Je procède en appelant la BDD que j'ai déjà initialisé en amond dans d'autres fichiers.
+Donc, disais-je : Je prend ma BDD, je stock le retour de la fonction getAll() dans ma variable "myvalues", elle est en remember car je veux que la page s'actualise à chaque suppression d'intéraction.
+J'utilise ensuite un "LazyColumn" avec un "items()" afin que ma liste "myvalues" soit découpée et générer "automatiquement" (vu le nombre de galères rencontré durant le développement de ce code je ne dirai jamais que quelque chose est automatique !) chaque intéractions contenues dans la BDD.
+Initialement je voulais passer directement par la fonction getAll comme ceci : items(MyDataBase.getAll())
+Méthode assez barbare je le reconnais mais si ça marche... ça marche.
+En l'occurence, non, ça ne marchait pas car le programme coupait le processus et hurlait que ce n'était pas possible de le faire dans le main thread car cela *pouvait* bloquer le programme... Passer des heures à changer un programme car il fait une crise de nerf sur un *peut-être* est une expérience que je ne souhaite à aucune personne... Ni à moi d'ailleurs !*/
 @Composable
 fun HistoryScreen(innerPadding: PaddingValues, MyDataBase: Chatting) {
     val context = LocalContext.current

@@ -5,14 +5,21 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.isen.barbaud.isensmartcompanion.models.EventModel
@@ -66,19 +73,31 @@ class EventDetailActivity : ComponentActivity() {
 
 @Composable
 fun EventDetail(event: EventModel, innerPaddingValues: PaddingValues) {
+    var activateNotification = remember { mutableStateOf(false) }
+    var notificationColor = remember { mutableStateOf(Color.White) }
     Column(Modifier.padding(innerPaddingValues)) {
-//        val id: String,
-//        val title: String,
-//        val description: String,
-//        val date: String,
-//        val location: String,
-//        val category: String): Serializable
         Text(event.title)
         Text(event.date)
         Text(event.category)
         Text(event.location)
         Text(event.description)
     }
+    OutlinedButton(
+        onClick = {
+            if (!activateNotification.value) {
+                activateNotification.value = true
+                notificationColor.value = Color.Green
+            } else {
+                activateNotification.value = false
+                notificationColor.value = Color.White
+            }
+        },
+        modifier = Modifier
+            .background(notificationColor.value)
+        ,
+        content = {
+            Image(painterResource(R.drawable.bell), "Delete current interaction")}
+    )
 }
 
 @Preview(showBackground = true)

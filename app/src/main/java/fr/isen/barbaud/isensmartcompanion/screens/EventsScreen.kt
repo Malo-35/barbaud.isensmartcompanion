@@ -64,8 +64,7 @@ fun EventsScreen(innerPadding: PaddingValues, eventHandler: (EventModel) -> Unit
 @Composable
 fun EventRow(event: EventModel, eventHandler: (EventModel) -> Unit) {
     // Utilisation de remember pour l'état de la notification et la couleur
-    var activateNotification = remember { mutableStateOf(false) }
-    var notificationColor = remember { mutableStateOf(Color.White) }
+
 
     Card(
         modifier = Modifier
@@ -81,17 +80,5 @@ fun EventRow(event: EventModel, eventHandler: (EventModel) -> Unit) {
     }
 
     // Bouton pour activer/désactiver la notification
-    OutlinedButton(
-        onClick = {
-            if (!activateNotification.value) {
-                activateNotification.value = true
-                notificationColor.value = Color.Green
-            } else {
-                activateNotification.value = false
-                notificationColor.value = Color.White
-            }
-        }
-    ) {
-        Text(if (activateNotification.value) "Désactiver Notification" else "Activer Notification")
-    }
+
 }
