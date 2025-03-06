@@ -14,12 +14,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import fr.isen.barbaud.isensmartcompanion.EventDetailActivity
@@ -59,16 +61,37 @@ fun EventsScreen(innerPadding: PaddingValues, eventHandler: (EventModel) -> Unit
     }
 }
 
-@Composable fun EventRow(event: EventModel, eventHandler: (EventModel) -> Unit) {
-    Card(modifier = Modifier
-        .padding(16.dp)
-        .clickable {
-            eventHandler(event)
-        }
+@Composable
+fun EventRow(event: EventModel, eventHandler: (EventModel) -> Unit) {
+    // Utilisation de remember pour l'état de la notification et la couleur
+    var activateNotification = remember { mutableStateOf(false) }
+    var notificationColor = remember { mutableStateOf(Color.White) }
+
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable {
+                eventHandler(event)
+            }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(event.title)
             Text(event.description)
         }
+    }
+
+    // Bouton pour activer/désactiver la notification
+    OutlinedButton(
+        onClick = {
+            if (!activateNotification.value) {
+                activateNotification.value = true
+                notificationColor.value = Color.Green
+            } else {
+                activateNotification.value = false
+                notificationColor.value = Color.White
+            }
+        }
+    ) {
+        Text(if (activateNotification.value) "Désactiver Notification" else "Activer Notification")
     }
 }

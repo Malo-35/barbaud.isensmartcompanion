@@ -38,9 +38,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -69,6 +71,10 @@ import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import fr.isen.barbaud.isensmartcompanion.EventDetailActivity
 import fr.isen.barbaud.isensmartcompanion.api.NetworkManager
 import fr.isen.barbaud.isensmartcompanion.datasaves.AppDatabaseSingleton
+import fr.isen.barbaud.isensmartcompanion.datasaves.Chatting
+import fr.isen.barbaud.isensmartcompanion.datasaves.QandA
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -123,10 +129,13 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(historyTab.title) {
-                            HistoryScreen(innerPadding)
+                            val db = remember { AppDatabaseSingleton.getInstance(context) }  // Garde l'instance en mémoire
+                            val myDataBase = remember { db.ChattingDao() }  // Garde la DAO en mémoire
+
+                            // Charger l'interface DAO dans un thread IO (ça ne pose pas problème)
+                            HistoryScreen(innerPadding, myDataBase)
                         }
                     }
-
                 }
             }
         }
