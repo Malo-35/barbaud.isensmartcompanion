@@ -41,6 +41,7 @@ import com.google.firebase.vertexai.GenerativeModel
 import com.google.firebase.vertexai.type.GenerateContentResponse
 import fr.isen.barbaud.isensmartcompanion.R
 import fr.isen.barbaud.isensmartcompanion.datasaves.AppDatabase
+import fr.isen.barbaud.isensmartcompanion.datasaves.AppDatabaseSingleton
 import fr.isen.barbaud.isensmartcompanion.datasaves.QandA
 import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import fr.isen.barbaud.isensmartcompanion.models.AnsweringAI
@@ -59,11 +60,15 @@ fun MainScreen(innerPadding: PaddingValues) {
     var MyGodDamnAnswer = remember { mutableStateOf<String?>("") }
     var discussionList = remember { mutableStateOf<List<String?>>(emptyList()) }
 
-    val db = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java, "database-name"
-    ).build()
-    var MyDataBase = db.ChattingDao()
+//    val db = Room.databaseBuilder(
+//        context,
+//        AppDatabase::class.java, "database-name"
+//    ).build()
+//    var MyDataBase = db.ChattingDao()
+    // Récupérer l'instance unique de la base de données
+    val db = AppDatabaseSingleton.getInstance(context)
+    val MyDataBase = db.ChattingDao()
+
 
     //val apiKey = BuildConfig.apiKey
     val ApiKey="AIzaSyBCRAYykFfKQNRooe0yK8QS5f3OGmX0qlM"
@@ -71,11 +76,13 @@ fun MainScreen(innerPadding: PaddingValues) {
         modelName = "gemini-1.5-flash",
         apiKey = ApiKey
     )
-    Box(modifier = Modifier.fillMaxWidth()
+    Box(modifier = Modifier
+        .fillMaxWidth()
         .fillMaxSize()
         .padding(innerPadding)) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
@@ -102,7 +109,7 @@ fun MainScreen(innerPadding: PaddingValues) {
             Spacer(Modifier.weight(1f))
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .requiredHeightIn(0.dp,500.dp)
+                .requiredHeightIn(0.dp, 500.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color.LightGray)
                 //.weight(1F)

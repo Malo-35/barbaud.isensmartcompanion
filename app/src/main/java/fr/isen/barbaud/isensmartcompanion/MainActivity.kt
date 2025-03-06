@@ -68,6 +68,7 @@ import fr.isen.barbaud.isensmartcompanion.screens.TabView
 import fr.isen.barbaud.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 import fr.isen.barbaud.isensmartcompanion.EventDetailActivity
 import fr.isen.barbaud.isensmartcompanion.api.NetworkManager
+import fr.isen.barbaud.isensmartcompanion.datasaves.AppDatabaseSingleton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -88,6 +89,11 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            // Récupérer l'instance unique de la base de données
+            val context = LocalContext.current
+            val db = AppDatabaseSingleton.getInstance(context)
+            val MyDataBase = db.ChattingDao()
+
             val homeTab = TabBarItem(title = getString(R.string.bottom_navbar_home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
             val eventsTab = TabBarItem(title = getString(R.string.bottom_navbar_events), selectedIcon = Icons.Filled.Notifications, unselectedIcon = Icons.Outlined.Notifications)
             val historyTab = TabBarItem(title = getString(R.string.bottom_navbar_history), selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
